@@ -295,7 +295,8 @@ def self_test(s: Settings) -> int:
             print(f"  OK    {name}: {fn()}")
         except Exception as e:  # report every failure, not just the first
             failed += 1
-            print(f"  FAIL  {name}: {type(e).__name__}: {e}")
+            cause = f" (caused by {type(e.__cause__).__name__}: {e.__cause__})" if e.__cause__ else ""
+            print(f"  FAIL  {name}: {type(e).__name__}: {e}{cause}")
     print("self-test passed" if not failed else f"self-test FAILED ({failed})")
     return 1 if failed else 0
 

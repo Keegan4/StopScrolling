@@ -14,7 +14,8 @@ macOS:    in Terminal, inside this folder:
               xattr -dr com.apple.quarantine .
               ./StopScrolling
           Allow camera access for Terminal when asked.
-Linux:    ./StopScrolling   (needs an X11 desktop session for the popups)
+Linux:    ./StopScrolling   (needs an X11 desktop session for the popups, and the
+          EGL/GLES libraries: sudo apt install libegl1 libgles2)
 
 A camera window opens. Keys in that window:
   q / Esc   quit

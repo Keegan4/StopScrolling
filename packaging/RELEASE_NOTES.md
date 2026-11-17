@@ -17,7 +17,7 @@ Extract the archive, then run the app:
   ./StopScrolling
   ```
   Allow camera access for Terminal when asked.
-- **Linux:** `./StopScrolling` from an X11 session.
+- **Linux:** `./StopScrolling` from an X11 session. It needs the EGL/GLES graphics libraries, which most desktops already have. If not, on Debian or Ubuntu run `sudo apt install libegl1 libgles2`.
 
 A camera window opens. Press `q` to quit, or `s` to snooze alerts for 5 minutes. Run with `--help` to see all options, for example `--no-preview`, `--no-sound`, `--max-popups 15` and `--enter-s 3`.
 
