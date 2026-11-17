@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+build/
+dist/
+
+# Model binaries (fetch with tools/download_models.py)
+models/*.task
+models/*.tflite
+models/*.part
+models/*.joblib
+models/*.onnx
+models/clip/
+
+# Collected data
+data/
+
+# Debug output
+out/
+
+# PyInstaller (the spec in packaging/ is tracked)
+*.spec
+!packaging/stopscrolling.spec
