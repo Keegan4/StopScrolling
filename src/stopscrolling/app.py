@@ -132,8 +132,8 @@ def _alert_note(alerts: AlertController, now: float) -> str:
         return "alerts off"
     left = alerts.snooze_remaining(now)
     if left > 0:
-        return f"alerts snoozed {int(left) // 60}:{int(left) % 60:02d} (s to resume)"
-    return "alerts ON (s to snooze)"
+        return f"alerts snoozed {int(left) // 60}:{int(left) % 60:02d}"
+    return "alerts on"
 
 
 def run_live(args: argparse.Namespace, s: Settings) -> int:

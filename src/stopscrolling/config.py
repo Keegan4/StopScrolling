@@ -24,6 +24,9 @@ PHONE_MODELS = {
     "lite2": MODELS_DIR / "efficientdet_lite2.tflite",  # slower, more accurate
 }
 CLIP_DIR = MODELS_DIR / "clip"  # phone-vs-calculator verifier
+DATA_DIR = USER_DIR / "data"  # training data (git-ignored)
+CLIPS_DIR = DATA_DIR / "clips"  # recorded webcam clips: <id>.mp4 + <id>.json
+PROCESSED_DIR = DATA_DIR / "processed"  # per clip: frames/, landmarks.npz, features.csv
 MEMES_DIR = USER_DIR / "assets" / "memes"  # your own meme images (optional)
 SOUNDS_DIR = USER_DIR / "assets" / "sounds"  # your own alarm sounds (optional)
 

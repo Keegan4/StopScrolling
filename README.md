@@ -94,6 +94,50 @@ State changes are printed to the console, for example `[14:02:11] on your phone 
 
 Angle conventions: yaw `+` means you turned to your right, and pitch `+` means you looked up.
 
+## Collecting training data (attention model)
+
+The next step is a model that learns what *paying attention to your work* looks like for
+you, in particular telling reading or writing on paper apart from looking at a phone.
+
+1. **Record labelled clips.** A camera window opens. Press `1`–`5` to pick what you're
+   about to do, then `SPACE` to start. A 3 s countdown gives you time to get into position,
+   then act it out naturally. Press `SPACE` again to stop (clips also stop after 60 s).
+   `x` deletes the last clip and `q` quits. The window shows how many seconds you've
+   recorded per label, so you can keep the data balanced.
+
+   ```bash
+   .venv\Scripts\python -m stopscrolling.data record
+   ```
+
+   | Key | Label | Counts as attentive? |
+   |---|---|---|
+   | 1 | screen: reading, typing, lectures | yes |
+   | 2 | paper: notes, textbook, writing, calculator | yes |
+   | 3 | phone | no |
+   | 4 | looking_away: daydreaming, chatting | no |
+   | 5 | absent: away from the desk | no |
+
+2. **Split the clips into frames, landmarks and features:**
+
+   ```bash
+   .venv\Scripts\python -m stopscrolling.data extract
+   ```
+
+   Each clip goes to `data/processed/<clip>/` as `frames/*.jpg`, `landmarks.npz` (478 face
+   landmarks, blendshapes, head pose and phone boxes per frame), `features.csv` and
+   `meta.json`. Everything is also combined into `data/processed/dataset.csv`. Clips that
+   were already extracted are skipped; `--force` redoes them. `--fps 15` samples more
+   densely, and `--no-frames` skips the JPEGs.
+
+3. **Check what you have:**
+
+   ```bash
+   .venv\Scripts\python -m stopscrolling.data summary
+   ```
+
+Aim for a few minutes per label, spread over several sessions with different lighting,
+seating and clothes. `data/` is git-ignored, so your recordings stay on your machine.
+
 ## Tests
 
 ```bash

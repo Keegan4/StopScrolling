@@ -180,14 +180,36 @@ StopScrolling/
 
 ## 8. Milestones
 
-| # | Milestone | Done when |
-|---|---|---|
-| 1 | **Skeleton + debug viewer** | `tools/debug_viewer.py` shows the webcam with face mesh, pitch/yaw/roll and phone boxes drawn on it |
-| 2 | **Heuristic MVP (CLI)** | Running `python -m stopscrolling --no-ui` plays a sound when you look down at your phone for 3 s and stops when you look up |
-| 3 | **State machine + calibration + tests** | False alarms are rare during 10 min of normal typing at a laptop |
-| 4 | **Data collection + v1 model** | The trained model beats the heuristic on phone **precision** on held-out sessions, including writing and reading |
-| 5 | **Desktop UI** | Tray app with start/stop, preview, settings and session summary |
-| 6 | **Polish + packaging** | One-click `.exe` built by PyInstaller, custom sounds, break mode |
+| # | Milestone | Done when | Status |
+|---|---|---|---|
+| 1 | **Skeleton + debug viewer** | `tools/debug_viewer.py` shows the webcam with face mesh, pitch/yaw/roll and phone boxes drawn on it | done |
+| 2 | **Heuristic MVP (CLI)** | Running `python -m stopscrolling` alerts when you look at your phone and stops when you look up | done (sound + meme popups) |
+| 3 | **State machine + tests** | False alarms are rare during 10 min of normal typing at a laptop | done (hold/clear timers, CLIP phone check); calibration still open |
+| 4a | **Attention data collection** | Labelled clips recorded and split into frames, landmarks and features (`python -m stopscrolling.data`) | done |
+| 4b | **v1 attention model** | A model trained on 4a's features beats the rule-based check on held-out *clips*, especially telling `paper` (reading/writing) apart from `phone` | next |
+| 5 | **Desktop UI** | Tray app with start/stop, preview, settings and session summary | |
+| 6 | **Polish + packaging** | One-click executables built by PyInstaller for Windows/macOS/Linux | done (v0.1.1 release) |
+
+### Milestone 4a: attention data (implemented)
+
+The goal is to detect **attention to your work**, not only phone use. Every clip gets one of five labels:
+
+| Key | Label | Attentive | What to record |
+|---|---|---|---|
+| 1 | `screen` | yes | reading, typing, watching a lecture |
+| 2 | `paper` | yes | reading notes or a textbook, writing, using a calculator (hard negatives for "head down") |
+| 3 | `phone` | no | scrolling, texting, videos |
+| 4 | `looking_away` | no | looking around, daydreaming, chatting |
+| 5 | `absent` | no | away from the desk |
+
+1. **Record:** `python -m stopscrolling.data record` saves `data/clips/<id>.mp4` plus a `.json` sidecar with the label and each frame's capture time.
+2. **Extract:** `python -m stopscrolling.data extract` samples each clip (10 fps by default) and writes `data/processed/<id>/` containing:
+   - `frames/*.jpg`
+   - `landmarks.npz`: 478 landmarks, 52 blendshapes, and head rotation and translation, plus phone boxes, scores and CLIP probabilities
+   - `features.csv`: 36 features per frame from `features/extractor.py`, the same function live inference will use
+   - `meta.json`
+3. **Combine:** all clips go into `data/processed/dataset.csv`, which `stopscrolling.data.dataset.load_dataset()` loads as `X`, `attentive`, `labels` and `groups` (clip ids).
+4. **Split for training:** always split train and test by clip or session, never by frame.
 
 ---
 

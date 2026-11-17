@@ -101,7 +101,7 @@ def render(
 
     _hud(vis, result, attention, settings, verify, fps, mirror)
     if note:
-        color = GREEN if "ON" in note else YELLOW
+        color = GREEN if note == "alerts on" else YELLOW
         tw = cv2.getTextSize(note, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)[0][0]
         _text(vis, note, (w - tw - 10, 20), color, 0.5)
     return vis
@@ -160,5 +160,5 @@ def _hud(vis, result, attention: AttentionState, settings: Settings, verify: boo
 
     h = vis.shape[0]
     fps_txt = f"{fps:4.1f} fps | " if fps else ""
-    keys = f"{fps_txt}q quit | s snooze | +/- det | [ ] tolerance | m mirror"
+    keys = f"{fps_txt}q quit | s snooze/resume | +/- det | [ ] tolerance | m mirror"
     _text(vis, keys, (10, h - 10), (220, 220, 220), 0.42)
